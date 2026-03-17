@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0a1628;
+  --color-navy-light: #121f38;
+  --color-navy-mid: #1a2d4a;
+  --color-gold: #d4a843;
+  --color-gold-dim: #a67c28;
+  --color-bone: #f0e6d3;
+  --color-bone-dim: #c4b8a5;
+  --color-blood: #8b1a1a;
+  --color-blood-bright: #c23030;
+  --color-teal: #1a5c5c;
+  --color-teal-light: #237878;
+  --color-success: #2d8a4e;
+  --color-danger: #c23030;
+
+  --font-display: "Pirata One", cursive;
+  --font-body: "DM Sans", sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-navy);
+    color: var(--color-bone);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+}
+
+/* Utility classes */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+  background-color: var(--color-gold);
+  color: var(--color-navy);
+  box-shadow: 0 10px 15px -3px rgb(212 168 67 / 0.2);
+}
+.btn-gold:hover {
+  background-color: var(--color-gold-dim);
+}
+.btn-gold:active {
+  transform: scale(0.95);
+}
+.btn-gold:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+  border: 2px solid rgb(212 168 67 / 0.5);
+  color: var(--color-gold);
+  background: transparent;
+}
+.btn-outline:hover {
+  background-color: rgb(212 168 67 / 0.1);
+}
+.btn-outline:active {
+  transform: scale(0.95);
+}
+.btn-outline:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.card {
+  border-radius: 1rem;
+  background-color: var(--color-navy-light);
+  border: 1px solid rgb(212 168 67 / 0.1);
+  padding: 1.25rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.5rem;
+  background-color: var(--color-navy-mid);
+  border: 1px solid rgb(212 168 67 / 0.2);
+  padding: 0.75rem 1rem;
+  color: var(--color-bone);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input::placeholder {
+  color: rgb(196 184 165 / 0.5);
+}
+.input:focus {
+  border-color: rgb(212 168 67 / 0.5);
+  box-shadow: 0 0 0 2px rgb(212 168 67 / 0.15);
+}
+
+.skull-title {
+  font-family: var(--font-display);
+  color: var(--color-gold);
+}
+
+/* Noise overlay for background texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-dim);
+  border-radius: 3px;
+}
