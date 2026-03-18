@@ -130,7 +130,7 @@ export default function Home() {
         </button>
 
         <div className="mt-auto pt-10 text-bone-dim/30 text-xs tracking-widest">
-          ⚓ AHOY ⚓
+          ⚓ ROBZ-GAMES ⚓
         </div>
       </div>
     );
@@ -224,7 +224,7 @@ export default function Home() {
       </button>
 
       <div className="mt-auto pt-10 text-bone-dim/30 text-xs tracking-widest">
-        ⚓ AHOY ⚓
+        ⚓ ROBZ-GAMES ⚓
       </div>
     </div>
   );
