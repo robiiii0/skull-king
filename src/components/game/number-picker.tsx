@@ -8,6 +8,7 @@ interface NumberPickerProps {
   label: string;
   disabled?: boolean;
   editable?: boolean;
+  step?: number;
 }
 
 export function NumberPicker({
@@ -18,9 +19,10 @@ export function NumberPicker({
   label,
   disabled,
   editable,
+  step = 1,
 }: NumberPickerProps) {
   function handleChange(delta: number) {
-    onChange(Math.max(min, Math.min(max, value + delta)));
+    onChange(Math.max(min, Math.min(max, value + delta * step)));
   }
 
   function handleInputChange(raw: string) {

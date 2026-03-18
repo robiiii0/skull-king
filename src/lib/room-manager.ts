@@ -268,7 +268,7 @@ export function handleDisconnect(socketId: PlayerId, io: Server) {
         for (const [pid] of currentRoom.players) playerRooms.delete(pid);
       }
       roomCleanupTimers.delete(code);
-    }, 15_000); // 15 seconds grace period
+    }, 60_000); // 60 seconds grace period
     roomCleanupTimers.set(code, timer);
     return;
   }

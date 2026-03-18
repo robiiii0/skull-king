@@ -47,13 +47,26 @@ export function useAuth() {
 
   const signUp = useCallback(
     async (username: string, password: string) => {
+      // Pre-check username availability before creating auth user
+      const { data: existing } = await supabase
+        .from("players")
+        .select("id")
+        .eq("username", username)
+        .maybeSingle();
+      if (existing) return { error: "Ce pseudo est deja pris" };
+
       const email = `${username.toLowerCase().replace(/[^a-z0-9]/g, "")}@skullking.app`;
 
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
-      if (error) return { error: error.message };
+      if (error) {
+        if (error.message.toLowerCase().includes("already")) {
+          return { error: "Ce pseudo est deja pris" };
+        }
+        return { error: error.message };
+      }
       if (!data.user) return { error: "Erreur inconnue" };
 
       // Create player profile

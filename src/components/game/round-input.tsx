@@ -58,6 +58,7 @@ export function RoundInput({ gameState, onSubmit }: RoundInputProps) {
             max={100}
             label="Points bonus"
             editable
+            step={10}
           />
 
           <button
