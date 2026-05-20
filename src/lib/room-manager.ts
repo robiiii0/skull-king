@@ -40,6 +40,7 @@ function serializeRoom(room: GameRoom, forPlayerId: PlayerId): ClientGameState {
     currentRound: room.currentRound,
     phase: room.phase,
     myId: forPlayerId,
+    firstPlayerId: room.firstPlayerId,
   };
 }
 
@@ -163,6 +164,8 @@ export function startGame(socketId: PlayerId, io: Server): string | null {
   if (room.players.size < 2) return "Il faut au moins 2 joueurs";
   if (room.phase !== "lobby") return "La partie a déjà commencé";
 
+  const playerIds = Array.from(room.players.keys());
+  room.firstPlayerId = playerIds[Math.floor(Math.random() * playerIds.length)];
   room.phase = "playing";
   room.currentRound = 1;
   broadcastState(room, io);
@@ -230,6 +233,12 @@ export function markReady(socketId: PlayerId, io: Server): string | null {
     if (room.currentRound >= 10) {
       room.phase = "game-over";
     } else {
+      // Rotate first player to the next one in insertion order
+      const playerIds = Array.from(room.players.keys());
+      const currentIdx = room.firstPlayerId
+        ? playerIds.indexOf(room.firstPlayerId)
+        : -1;
+      room.firstPlayerId = playerIds[(currentIdx + 1) % playerIds.length];
       room.currentRound++;
       room.phase = "playing";
     }

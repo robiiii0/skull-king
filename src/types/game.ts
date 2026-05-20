@@ -34,6 +34,7 @@ export interface GameRoom {
   currentRound: number;
   phase: GamePhase;
   createdAt: number;
+  firstPlayerId?: PlayerId;
 }
 
 export interface ClientGameState {
@@ -43,6 +44,7 @@ export interface ClientGameState {
   currentRound: number;
   phase: GamePhase;
   myId: PlayerId;
+  firstPlayerId?: PlayerId;
 }
 
 export interface ServerToClientEvents {

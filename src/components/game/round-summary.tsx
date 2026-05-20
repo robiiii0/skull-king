@@ -46,7 +46,7 @@ export function RoundSummary({ gameState, onReady }: RoundSummaryProps) {
                 </div>
                 <div className="text-xs text-bone-dim">
                   Annoncé {rd.bid} → Réalisé {rd.actual}
-                  {rd.bonus > 0 && ` (+${rd.bonus} bonus)`}
+                  {rd.bonus !== 0 && ` (${rd.bonus > 0 ? "+" : ""}${rd.bonus} bonus)`}
                 </div>
               </div>
               <div className="text-right">
@@ -66,6 +66,18 @@ export function RoundSummary({ gameState, onReady }: RoundSummaryProps) {
           );
         })}
       </div>
+
+      {gameState.currentRound < 10 && gameState.firstPlayerId && (() => {
+        const players = gameState.players;
+        const idx = players.findIndex(p => p.player.id === gameState.firstPlayerId);
+        const next = players[(idx + 1) % players.length];
+        const isMe = next.player.id === gameState.myId;
+        return (
+          <p className="text-gold text-sm text-center">
+            {isMe ? "Tu commenceras la prochaine manche !" : `${next.player.name} commence la prochaine manche`}
+          </p>
+        );
+      })()}
 
       <div className="w-full max-w-sm">
         <button

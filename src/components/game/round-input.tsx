@@ -31,6 +31,16 @@ export function RoundInput({ gameState, onSubmit }: RoundInputProps) {
         <p className="text-bone-dim text-sm">
           {gameState.currentRound} carte{gameState.currentRound > 1 ? "s" : ""} en jeu
         </p>
+        {gameState.firstPlayerId && (() => {
+          const first = gameState.players.find(p => p.player.id === gameState.firstPlayerId);
+          if (!first) return null;
+          const isMe = first.player.id === gameState.myId;
+          return (
+            <p className="text-gold text-sm mt-1">
+              {isMe ? "Tu commences cette manche !" : `${first.player.name} commence cette manche`}
+            </p>
+          );
+        })()}
       </div>
 
       {!hasSubmitted ? (
@@ -54,8 +64,8 @@ export function RoundInput({ gameState, onSubmit }: RoundInputProps) {
           <NumberPicker
             value={bonus}
             onChange={setBonus}
-            min={0}
-            max={100}
+            min={-500}
+            max={500}
             label="Points bonus"
             editable
             step={10}
@@ -78,8 +88,10 @@ export function RoundInput({ gameState, onSubmit }: RoundInputProps) {
             <p className="text-bone-dim text-xs uppercase tracking-widest">R&eacute;alis&eacute;s</p>
             <p className="skull-title text-3xl">{me?.rounds[roundIdx].actual}</p>
           </div>
-          {(me?.rounds[roundIdx].bonus ?? 0) > 0 && (
-            <p className="text-gold text-sm">+{me?.rounds[roundIdx].bonus} bonus</p>
+          {(me?.rounds[roundIdx].bonus ?? 0) !== 0 && (
+            <p className={`text-sm ${(me?.rounds[roundIdx].bonus ?? 0) > 0 ? "text-gold" : "text-danger"}`}>
+              {(me?.rounds[roundIdx].bonus ?? 0) > 0 ? "+" : ""}{me?.rounds[roundIdx].bonus} bonus
+            </p>
           )}
         </div>
       )}

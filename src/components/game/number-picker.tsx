@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 interface NumberPickerProps {
   value: number;
   onChange: (value: number) => void;
@@ -21,18 +23,32 @@ export function NumberPicker({
   editable,
   step = 1,
 }: NumberPickerProps) {
+  const [rawValue, setRawValue] = useState(String(value));
+
+  useEffect(() => {
+    setRawValue(String(value));
+  }, [value]);
+
   function handleChange(delta: number) {
     onChange(Math.max(min, Math.min(max, value + delta * step)));
   }
 
   function handleInputChange(raw: string) {
-    const cleaned = raw.replace(/[^0-9]/g, "");
-    if (cleaned === "") {
-      onChange(min);
+    // Allow intermediate states like "-" or empty while typing
+    if (raw === "" || raw === "-") {
+      setRawValue(raw);
       return;
     }
-    const n = parseInt(cleaned, 10);
-    onChange(Math.max(min, Math.min(max, n)));
+    setRawValue(raw);
+    const n = parseInt(raw, 10);
+    if (!isNaN(n)) onChange(Math.max(min, Math.min(max, n)));
+  }
+
+  function handleBlur() {
+    const n = parseInt(rawValue, 10);
+    const clamped = isNaN(n) ? 0 : Math.max(min, Math.min(max, n));
+    onChange(clamped);
+    setRawValue(String(clamped));
   }
 
   return (
@@ -53,10 +69,11 @@ export function NumberPicker({
           <input
             type="text"
             inputMode="numeric"
-            pattern="[0-9]*"
-            className="skull-title text-5xl w-16 text-center rounded-xl bg-navy-mid border-2 border-gold/30 focus:border-gold outline-none py-1 px-1"
-            value={value}
+            pattern="-?[0-9]*"
+            className="skull-title text-5xl w-20 text-center rounded-xl bg-navy-mid border-2 border-gold/30 focus:border-gold outline-none py-1 px-1"
+            value={rawValue}
             onChange={(e) => handleInputChange(e.target.value)}
+            onBlur={handleBlur}
             disabled={disabled}
           />
         ) : (

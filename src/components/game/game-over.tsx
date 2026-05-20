@@ -1,63 +1,21 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
 import type { ClientGameState } from "@/types/game";
-import { saveMatchResults, updateMyStats } from "@/lib/save-match";
 import type { EloResult } from "@/lib/save-match";
 import { getRank } from "@/lib/ranks";
 
 interface GameOverProps {
   gameState: ClientGameState;
+  eloResults: EloResult[];
+  saving: boolean;
 }
 
-export function GameOver({ gameState }: GameOverProps) {
-  const [eloResults, setEloResults] = useState<EloResult[]>([]);
-  const [saving, setSaving] = useState(false);
-  const savedRef = useRef(false);
-
+export function GameOver({ gameState, eloResults, saving }: GameOverProps) {
   const sorted = [...gameState.players].sort(
     (a, b) => b.totalScore - a.totalScore
   );
 
   const medals = ["🥇", "🥈", "🥉"];
-  const isHost = gameState.myId === gameState.hostId;
-  const me = gameState.players.find((p) => p.player.id === gameState.myId);
-
-  useEffect(() => {
-    if (savedRef.current) return;
-    savedRef.current = true;
-    setSaving(true);
-
-    const tasks: Promise<void>[] = [];
-
-    // Host creates the match record and match_players in DB
-    if (isHost) {
-      tasks.push(
-        saveMatchResults(gameState).then((results) => {
-          if (results) setEloResults(results);
-        })
-      );
-    }
-
-    // Every player updates their own profile (respects RLS)
-    if (me?.player.name) {
-      const myName = me.player.name;
-      tasks.push(
-        updateMyStats(gameState, myName).then((result) => {
-          if (result) {
-            setEloResults((prev) => {
-              // If host already set results for everyone, skip duplicate
-              if (prev.some((r) => r.player_id === result.player_id))
-                return prev;
-              return [...prev, result];
-            });
-          }
-        })
-      );
-    }
-
-    Promise.all(tasks).then(() => setSaving(false));
-  }, [isHost, gameState, me?.player.name]);
 
   function getEloChange(playerName: string): EloResult | undefined {
     return eloResults.find((r) => r.username === playerName);
